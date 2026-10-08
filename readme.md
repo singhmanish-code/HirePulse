@@ -28,6 +28,11 @@ HirePulse is an AI-powered placement preparation platform designed to help stude
 - **Company & Role Context Switcher:** Allows the AI to adjust evaluation criteria between deep systems knowledge (Product) and broad fundamental skills (IT Services).
 
 ## How to run it
+
+- **Live URL:** https://hire-pulse-nine.vercel.app
+*(No authentication or test login required — evaluators can run analysis directly using preloaded sample data)*
+
+### Local Setup
 1. Clone the repository:
 ```bash
-git clone https://github.com/singhmanish-code/HirePulse.git
+git clone [https://github.com/singhmanish-code/HirePulse.git](https://github.com/singhmanish-code/HirePulse.git)
