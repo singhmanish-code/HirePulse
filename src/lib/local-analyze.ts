@@ -77,10 +77,13 @@ export function analyzeLocal(resume: string, jd: string, companyType: CompanyTyp
   const stackStr = stack.length ? stack.join(", ") : "the required stack";
   const pick = [lines[0] ?? "Built a web application project", lines[1] ?? "Collaborated with a team on coursework"];
   const metrics = ["cutting average response time by 35%", "reducing reported defects by 40% across 3 release cycles"];
+  const goals = ["a faster, more reliable service for its users", "to raise quality and consistency of delivery"];
   const starBullets = pick.map((l, i) => {
-    const base = l.replace(/\.$/, "").split(/[:;]/).pop()!.trim();
-    const ctx = l.split(/[:;]/)[0]!.trim();
-    return `Situation/Task: ${ctx === base ? "Facing a need for a faster, more reliable workflow" : `As ${ctx}`}, owned the goal to ${base.charAt(0).toLowerCase() + base.slice(1)}. Action: Applied ${stack[i] ?? stackStr} with clean, tested code and code reviews. Result: Delivered on schedule, ${metrics[i]}.`;
+    const parts = l.replace(/\.$/, "").split(/[:;]/).map((x) => x.trim()).filter(Boolean);
+    const ctx = parts.length > 1 ? parts[0]! : "part of a project team";
+    const actions = (parts.length > 1 ? parts.slice(1) : parts).join(" and ");
+    const tech = stack[i] ?? stack[0] ?? stackStr;
+    return `As ${ctx}, the team needed ${goals[i]} (S/T); ${actions.charAt(0).toLowerCase() + actions.slice(1)}, applying ${tech}-ready practices like automated tests and code reviews (A), ${metrics[i]} (R).`;
   });
 
   // Questions targeting the gaps first
