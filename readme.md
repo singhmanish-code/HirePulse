@@ -29,5 +29,5 @@ HirePulse is an AI-powered placement preparation platform designed to help stude
 
 ## How to run it
 1. Clone the repository:
-   ```bash
-   git clone [https://github.com/singhmanish-code/HirePulse.git](https://github.com/singhmanish-code/HirePulse.git)
+```bash
+git clone https://github.com/singhmanish-code/HirePulse.git
