@@ -110,7 +110,7 @@ export const analyzeFit = createServerFn({ method: "POST" })
       "hirepulse_report",
       schema,
     );
-    if (!r.data) return { error: r.error };
+    if (!r.data) return { error: r.error ?? "Request failed." };
     const d = r.data;
     return {
       result: {
@@ -149,7 +149,7 @@ export const critiqueAnswer = createServerFn({ method: "POST" })
       "hirepulse_critique",
       schema,
     );
-    if (!r.data) return { error: r.error };
+    if (!r.data) return { error: r.error ?? "Request failed." };
     const c = (n: number) => Math.max(1, Math.min(10, Math.round(n)));
     return {
       result: {
