@@ -161,5 +161,43 @@
   .num { flex:none; display:grid; place-items:center; width:1.75rem; height:1.75rem; border-radius:999px; background:var(--foreground); color:var(--background); font-size:.8rem; font-weight:700; }
   .score { width:9rem; height:9rem; border-radius:999px; display:grid; place-items:center; background:conic-gradient(var(--primary) calc(var(--p) * 1%), var(--border) 0); }
   .score span { width:7.5rem; height:7.5rem; border-radius:999px; display:grid; place-items:center; background:var(--card); font-family:var(--font-display); font-size:2.75rem; }
+  .segmented { display:grid; grid-template-columns:1fr 1fr; gap:.25rem; padding:.25rem; border:1px solid var(--border); border-radius:999px; background:var(--card); }
+  .seg-opt { cursor:pointer; text-align:center; padding:.6rem .75rem; border-radius:999px; font-size:.875rem; font-weight:600; color:var(--muted-foreground); transition:background .2s, color .2s; }
+  .seg-opt:hover { color:var(--foreground); }
+  .seg-opt.active { background:var(--foreground); color:var(--background); }
+  .seg-opt:has(input:focus-visible) { outline:2px solid var(--primary); outline-offset:2px; }
+  .btn-small { padding:.45rem 1rem; border-radius:999px; font-size:.8rem; font-weight:600; border:1px solid var(--primary); color:var(--primary); white-space:nowrap; transition:background .15s; }
+  .btn-small:hover { background:oklch(0.55 0.15 155 / .1); }
+  .drill { margin-top:.9rem; margin-left:0; padding:1rem; border:1px dashed var(--border); border-radius:var(--radius); background:var(--background); }
+  @media (min-width:640px) { .drill { margin-left:2.75rem; } }
+  .timer { font-variant-numeric:tabular-nums; font-weight:700; font-size:.9rem; padding:.2rem .6rem; border-radius:999px; background:oklch(0.55 0.15 155 / .1); color:var(--primary); }
+  .timer-low { background:oklch(0.577 0.245 27.325 / .12); color:var(--destructive); }
+  .mini-score { display:flex; flex-direction:column; gap:.25rem; padding:.75rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); }
+  .bar { height:.3rem; border-radius:999px; background:var(--border); overflow:hidden; }
+  .bar > span { display:block; height:100%; background:var(--primary); transition:width .6s ease; }
+  .tip { margin-top:.75rem; padding:.75rem 1rem; border-left:3px solid var(--primary); background:oklch(0.55 0.15 155 / .06); border-radius:.5rem; font-size:.9rem; }
+  .spinner { width:1rem; height:1rem; border-radius:999px; border:2px solid currentColor; border-right-color:transparent; animation:spin .7s linear infinite; }
+  .skeleton { background:linear-gradient(90deg, var(--card), var(--border), var(--card)); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+  .fade-in { animation:fadein .35s ease both; }
 }
 @keyframes pulse { 70% { box-shadow:0 0 0 8px transparent; } 100% { box-shadow:0 0 0 0 transparent; } }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes shimmer { to { background-position:-200% 0; } }
+@keyframes fadein { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce) { .spinner, .skeleton, .fade-in, .pulse-dot { animation-duration:0s !important; animation-iteration-count:1 !important; } }
+
+@media print {
+  @page { size:A4; margin:12mm; }
+  .no-print, button, textarea, input { display:none !important; }
+  body { background:#fff; font-size:10.5pt; }
+  .banner { padding:.25rem; font-size:8pt; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  main { padding:0 !important; max-width:none !important; }
+  .print-area { margin-top:.5rem !important; animation:none !important; }
+  .print-grid { display:grid !important; grid-template-columns:repeat(3, 1fr) !important; gap:.5rem !important; }
+  .card { box-shadow:none; padding:.6rem .8rem; break-inside:avoid; }
+  .card-title { margin-bottom:.35rem; }
+  .score, .chip, .num { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .score { width:6rem; height:6rem; }
+  .score span { width:5rem; height:5rem; font-size:1.9rem; }
+  .space-y-3 > * + *, .space-y-4 > * + * { margin-top:.35rem !important; }
+}
