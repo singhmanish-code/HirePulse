@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { analyzeFit, critiqueAnswer, type Analysis, type Critique } from "@/lib/analyze.functions";
+import { analyzeLocal, critiqueLocal } from "@/lib/local-analyze";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,14 +68,15 @@ function Index() {
     setLoading(true);
     setResult(null);
     try {
-      const r = await analyze({ data: { resume, jd, companyType, level } });
-      if (r.error) setError(r.error);
-      else {
-        setResult(r.result ?? null);
-        setProfile({ companyType, level });
+      let out: Analysis;
+      try {
+        const r = await analyze({ data: { resume, jd, companyType, level } });
+        out = r.result ?? analyzeLocal(resume, jd, companyType, level);
+      } catch {
+        out = analyzeLocal(resume, jd, companyType, level);
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+      setResult(out);
+      setProfile({ companyType, level });
     } finally {
       setLoading(false);
     }
@@ -226,10 +228,12 @@ function QuestionItem({ index, question, companyType, level }: { index: number; 
     if (!answer.trim()) { setErr("Type an answer first."); return; }
     setErr(null); setSubmitting(true);
     try {
-      const r = await critique({ data: { question, answer, companyType, level } });
-      if (r.error) setErr(r.error); else setFb(r.result ?? null);
-    } catch {
-      setErr("Something went wrong. Please try again.");
+      try {
+        const r = await critique({ data: { question, answer, companyType, level } });
+        setFb(r.result ?? critiqueLocal(question, answer));
+      } catch {
+        setFb(critiqueLocal(question, answer));
+      }
     } finally {
       setSubmitting(false);
     }

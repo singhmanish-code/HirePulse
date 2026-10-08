@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { analyzeLocal, critiqueLocal } from "./local-analyze";
 
 const CompanyType = z.enum(["startup", "enterprise"]);
 const Level = z.enum(["internship", "fresher"]);
@@ -40,8 +41,7 @@ async function streamJson<T>(
   name: string,
   schema: object,
 ): Promise<{ data?: T; error?: string }> {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) return { error: "AI is not configured." };
+  const key = process.env["LOVABLE_API_KEY"] ?? "";
   const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
     method: "POST",
     headers: { "Lovable-API-Key": key, "Content-Type": "application/json", "X-Lovable-AIG-SDK": "fetch" },
@@ -93,6 +93,7 @@ async function streamJson<T>(
 export const analyzeFit = createServerFn({ method: "POST" })
   .inputValidator((d) => Input.parse(d))
   .handler(async ({ data }): Promise<{ result?: Analysis; error?: string }> => {
+    if (!process.env["LOVABLE_API_KEY"]) return { result: analyzeLocal(data.resume, data.jd, data.companyType, data.level) };
     const schema = {
       type: "object",
       additionalProperties: false,
@@ -110,7 +111,7 @@ export const analyzeFit = createServerFn({ method: "POST" })
       "hirepulse_report",
       schema,
     );
-    if (!r.data) return { error: r.error ?? "Request failed." };
+    if (!r.data) return { result: analyzeLocal(data.resume, data.jd, data.companyType, data.level) };
     const d = r.data;
     return {
       result: {
@@ -132,6 +133,7 @@ const CritiqueInput = z.object({
 export const critiqueAnswer = createServerFn({ method: "POST" })
   .inputValidator((d) => CritiqueInput.parse(d))
   .handler(async ({ data }): Promise<{ result?: Critique; error?: string }> => {
+    if (!process.env["LOVABLE_API_KEY"]) return { result: critiqueLocal(data.question, data.answer) };
     const schema = {
       type: "object",
       additionalProperties: false,
@@ -149,7 +151,7 @@ export const critiqueAnswer = createServerFn({ method: "POST" })
       "hirepulse_critique",
       schema,
     );
-    if (!r.data) return { error: r.error ?? "Request failed." };
+    if (!r.data) return { result: critiqueLocal(data.question, data.answer) };
     const c = (n: number) => Math.max(1, Math.min(10, Math.round(n)));
     return {
       result: {
